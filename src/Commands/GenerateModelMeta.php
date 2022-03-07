@@ -1,12 +1,13 @@
 <?php
 
-namespace App\Console\Commands\Dev;
+namespace SsWiking\ElasticOrm\Commands;
 
 use Barryvdh\Reflection\DocBlock;
 use Barryvdh\Reflection\DocBlock\Context;
 use Barryvdh\Reflection\DocBlock\Serializer as DocBlockSerializer;
 use Barryvdh\Reflection\DocBlock\Tag;
 use Elasticsearch\Client;
+use Elasticsearch\ClientBuilder;
 use Illuminate\Console\Command;
 use Illuminate\Contracts\Filesystem\FileNotFoundException;
 use Illuminate\Filesystem\Filesystem;
@@ -73,6 +74,13 @@ class GenerateModelMeta extends Command
     {
         parent::__construct();
         $this->files = $files;
+        $this->client = ClientBuilder::create()
+            ->setHosts(config('elastic-orm.hosts'))
+            ->setBasicAuthentication(
+                config('elastic-orm.username'),
+                config('elastic-orm.password')
+            )
+            ->build();
     }
 
     /**

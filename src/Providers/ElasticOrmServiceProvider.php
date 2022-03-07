@@ -14,7 +14,7 @@ class ElasticOrmServiceProvider extends ServiceProvider
     public function register(): void
     {
         // Automatically apply the package configuration
-        $this->mergeConfigFrom(__DIR__ . '/../config/elastic-orm.php', 'elastic-orm');
+        $this->mergeConfigFrom(__DIR__ . '/../../config/elastic-orm.php', 'elastic-orm');
 
         $this->app->singleton(ElasticOrm\Contracts\Config::class, ElasticOrm\Config::class);
         $this->app->bind(ElasticOrm\Contracts\Builder::class, ElasticOrm\Builder::class);
@@ -30,11 +30,13 @@ class ElasticOrmServiceProvider extends ServiceProvider
         if ($this->app->runningInConsole()) {
             // Publishing the config
             $this->publishes([
-                __DIR__ . '/../config/elastic-orm.php' => config_path('elastic-orm.php'),
+                __DIR__ . '/../../config/elastic-orm.php' => config_path('elastic-orm.php'),
             ], 'config');
 
             // Registering package commands.
-            $this->commands([]);
+            $this->commands([
+                ElasticOrm\Commands\GenerateModelMeta::class,
+            ]);
         }
     }
 
