@@ -496,9 +496,12 @@ class Builder implements Contracts\Builder
 
         $body = [
             'sort' => $this->sorts,
-            'collapse' => $this->collapse,
             'query' => ['bool' => $query]
         ];
+
+        if (!empty($this->collapse)) {
+            $body['collapse'] = $this->collapse;
+        }
 
         if ($withFrom) {
             $body['from'] = $this->from;
