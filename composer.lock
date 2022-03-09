@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "a0d4361415ff28ae029dba839dc4daa6",
+    "content-hash": "6df4dd8d9949904759d5e578a427c3de",
     "packages": [
         {
             "name": "barryvdh/reflection-docblock",

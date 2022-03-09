@@ -18,6 +18,7 @@ class ElasticOrmServiceProvider extends ServiceProvider
 
         $this->app->singleton(ElasticOrm\Contracts\Config::class, ElasticOrm\Config::class);
         $this->app->bind(ElasticOrm\Contracts\Builder::class, ElasticOrm\Builder::class);
+        $this->app->bind('elastic-orm', ElasticOrm\Builder::class);
     }
 
     /**

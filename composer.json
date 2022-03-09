@@ -47,7 +47,10 @@
         "laravel": {
             "providers": [
                 "SsWiking\\ElasticOrm\\Providers\\ElasticOrmServiceProvider"
-            ]
+            ],
+            "aliases": {
+                "ElasticOrm": "SsWiking\\ElasticOrm\\Facades\\ElasticOrm"
+            }
         }
     }
 }
