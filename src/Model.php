@@ -149,7 +149,8 @@ abstract class Model implements Arrayable, ArrayAccess, Jsonable, JsonSerializab
      */
     public function setCollapsed(array $collapsed = []): void
     {
-        $this->collapsed = collect($collapsed)->recursive();
+        $this->collapsed = collect($collapsed)
+            ->map(fn($group) => collect($group));
     }
 
     /**

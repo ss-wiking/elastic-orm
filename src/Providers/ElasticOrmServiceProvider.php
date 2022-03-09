@@ -2,9 +2,9 @@
 
 namespace SsWiking\ElasticOrm\Providers;
 
-use Illuminate\Support\Collection;
 use Illuminate\Support\ServiceProvider;
 use SsWiking\ElasticOrm;
+use SsWiking\ElasticOrm\Contracts;
 
 class ElasticOrmServiceProvider extends ServiceProvider
 {
@@ -16,8 +16,8 @@ class ElasticOrmServiceProvider extends ServiceProvider
         // Automatically apply the package configuration
         $this->mergeConfigFrom(__DIR__ . '/../../config/elastic-orm.php', 'elastic-orm');
 
-        $this->app->singleton(ElasticOrm\Contracts\Config::class, ElasticOrm\Config::class);
-        $this->app->bind(ElasticOrm\Contracts\Builder::class, ElasticOrm\Builder::class);
+        $this->app->singleton(Contracts\Config::class, ElasticOrm\Config::class);
+        $this->app->bind(Contracts\Builder::class, ElasticOrm\Builder::class);
         $this->app->bind('elastic-orm', ElasticOrm\Builder::class);
     }
 
@@ -26,36 +26,27 @@ class ElasticOrmServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        $this->bootCollectionMacros();
+        // Publishing the config
+        $this->publishes([
+            __DIR__ . '/../../config/elastic-orm.php' => config_path('elastic-orm.php'),
+        ], 'config');
 
-        if ($this->app->runningInConsole()) {
-            // Publishing the config
-            $this->publishes([
-                __DIR__ . '/../../config/elastic-orm.php' => config_path('elastic-orm.php'),
-            ], 'config');
-
-            // Registering package commands.
-            $this->commands([
-                ElasticOrm\Commands\GenerateModelMeta::class,
-            ]);
-        }
+        // Registering package commands.
+        $this->commands([
+            ElasticOrm\Commands\GenerateModelMeta::class,
+        ]);
     }
 
     /**
-     * Defines collection macros
-     *
-     * @return void
+     * @inheritDoc
      */
-    private function bootCollectionMacros(): void
+    public function provides(): array
     {
-        Collection::macro('recursive', function () {
-            return $this->map(function ($value) {
-                if (is_array($value)) {
-                    return collect($value)->recursive();
-                }
-
-                return $value;
-            });
-        });
+        return [
+            Contracts\Config::class,
+            Contracts\Builder::class,
+            ElasticOrm\Config::class,
+            ElasticOrm\Builder::class,
+        ];
     }
 }
