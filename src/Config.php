@@ -2,6 +2,8 @@
 
 namespace SsWiking\ElasticOrm;
 
+use Illuminate\Config\Repository;
+
 class Config implements Contracts\Config
 {
     /**
@@ -25,13 +27,13 @@ class Config implements Contracts\Config
      */
     private ?string $password;
 
-    public function __construct()
+    public function __construct(Repository $config)
     {
-        $config = config('elastic-orm');
+        $credentials = $config->get('elastic-orm');
 
-        $this->hosts = $config['hosts'];
-        $this->username = $config['username'];
-        $this->password = $config['password'];
+        $this->hosts = $credentials['hosts'];
+        $this->username = $credentials['username'];
+        $this->password = $credentials['password'];
     }
 
     /**

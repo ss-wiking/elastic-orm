@@ -17,6 +17,7 @@
     ],
     "require": {
         "php": "^7.4|^8.0",
+        "ext-json": "*",
         "barryvdh/reflection-docblock": "^2.0",
         "elasticsearch/elasticsearch": "^7.17",
         "illuminate/support": "^8.0"
@@ -36,8 +37,8 @@
         }
     },
     "scripts": {
-        "test": "vendor/bin/phpunit",
-        "test-coverage": "vendor/bin/phpunit --coverage-html coverage"
+        "test": "vendor/bin/phpunit tests",
+        "test-coverage": "vendor/bin/phpunit tests --coverage-html coverage"
     },
     "config": {
         "sort-packages": true
