@@ -1,4 +1,4 @@
-# Very short description of the package
+# Elasticsearch ORM like Eloquent
 
 [![Latest Version on Packagist](https://img.shields.io/packagist/v/ss-wiking/elastic-orm.svg?style=flat-square)](https://packagist.org/packages/ss-wiking/elastic-orm)
 [![Total Downloads](https://img.shields.io/packagist/dt/ss-wiking/elastic-orm.svg?style=flat-square)](https://packagist.org/packages/ss-wiking/elastic-orm)
@@ -41,12 +41,8 @@ If you discover any security related issues, please email ss.wiking@outlook.com 
 ## Credits
 
 -   [Darii Kliementiev](https://github.com/ss-wiking)
--   [All Contributors](../../contributors)
+-   [Official Elasticsearch PHP Library](https://github.com/elastic/elasticsearch-php)
 
 ## License
 
 The MIT License (MIT). Please see [License File](LICENSE.md) for more information.
-
-## Laravel Package Boilerplate
-
-This package was generated using the [Laravel Package Boilerplate](https://laravelpackageboilerplate.com).
