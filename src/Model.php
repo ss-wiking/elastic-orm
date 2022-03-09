@@ -27,16 +27,16 @@ abstract class Model implements Arrayable, ArrayAccess, Jsonable, JsonSerializab
     /**
      * The model's collapsed entities
      *
-     * @var Collection|array<string, static[]>
+     * @var Collection|array<string, Collection|static[]>
      */
     protected Collection $collapsed;
 
     /**
      * Model index name
      *
-     * @var string|null
+     * @var string
      */
-    protected ?string $index;
+    protected string $index;
 
     /**
      * Attributes type casts
@@ -69,9 +69,7 @@ abstract class Model implements Arrayable, ArrayAccess, Jsonable, JsonSerializab
      */
     public function __construct(array $attributes = [])
     {
-        $this->attributes = $attributes;
-        $this->setCollapsed();
-        $this->builder = $this->makeBuilder();
+        $this->boot($attributes);
     }
 
     /**
@@ -285,7 +283,7 @@ abstract class Model implements Arrayable, ArrayAccess, Jsonable, JsonSerializab
      */
     public function getIndex(): string
     {
-        return $this->index ?? Str::snake(class_basename(static::class));
+        return $this->index;
     }
 
     /**
@@ -346,6 +344,20 @@ abstract class Model implements Arrayable, ArrayAccess, Jsonable, JsonSerializab
     public function offsetUnset($offset): void
     {
         unset($this->attributes[$offset]);
+    }
+
+    /**
+     * Bootstrap model
+     *
+     * @param array $attributes
+     * @return void
+     */
+    protected function boot(array $attributes): void
+    {
+        $this->attributes = $attributes;
+        $this->index = $this->index ?? Str::snake(class_basename(static::class));
+        $this->builder = $this->makeBuilder();
+        $this->setCollapsed();
     }
 
     /**
