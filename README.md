@@ -4,7 +4,7 @@
 [![Total Downloads](https://img.shields.io/packagist/dt/ss-wiking/elastic-orm.svg?style=flat-square)](https://packagist.org/packages/ss-wiking/elastic-orm)
 ![GitHub Actions](https://github.com/ss-wiking/elastic-orm/actions/workflows/main.yml/badge.svg)
 
-This is where your description should go. Try and limit it to a paragraph or two, and maybe throw in a mention of what PSRs you support to avoid any confusion with users and contributors.
+High level Elasticsearch ORM for Laravel with query builder and models
 
 ## Installation
 
@@ -16,8 +16,33 @@ composer require ss-wiking/elastic-orm
 
 ## Usage
 
+### Model
 ```php
-// Usage description here
+use SsWiking\ElasticOrm\Model;
+
+class Product extends Model {
+    /**
+     * Model index name
+     * If not provided, it will be got from model name in plural form
+     *
+     * @var string
+     */
+    protected string $index = 'products';
+}
+```
+
+### Query Builder via Model
+```php
+$products = Product::whereIn('id', $ids)
+    ->whereGreaterThan('price', $minPrice)
+    ->get();
+```
+
+### Query Builder via Facade
+```php
+use SsWiking\ElasticOrm\Facades\ElasticOrm;
+
+ElasticOrm::index('goods')->limit(10)->offset(10)->get();
 ```
 
 ### Testing
@@ -25,10 +50,6 @@ composer require ss-wiking/elastic-orm
 ```bash
 composer test
 ```
-
-### Changelog
-
-Please see [CHANGELOG](CHANGELOG.md) for more information what has changed recently.
 
 ## Contributing
 
