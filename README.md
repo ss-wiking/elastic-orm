@@ -45,6 +45,16 @@ use SsWiking\ElasticOrm\Facades\ElasticOrm;
 ElasticOrm::index('goods')->limit(10)->offset(10)->get();
 ```
 
+### Publishing config
+```bash
+php artisan vendor:publish --provider="SsWiking\ElasticOrm\Providers\ElasticOrmServiceProvider" --tag=config
+```
+
+### Generate model's meta
+```bash
+php artisan elastic-orm:meta "App\Models\Elastic\YourModelName"
+```
+
 ### Testing
 
 ```bash
