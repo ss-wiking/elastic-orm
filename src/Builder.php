@@ -2,6 +2,7 @@
 
 namespace SsWiking\ElasticOrm;
 
+use DomainException;
 use Elasticsearch\Client;
 use Elasticsearch\ClientBuilder;
 use Elasticsearch\Common\Exceptions\Missing404Exception;
@@ -94,6 +95,22 @@ class Builder implements Contracts\Builder
     public function __construct(Contracts\Config $config)
     {
         $this->connect($config);
+    }
+
+    /**
+     * Dynamically call base client methods
+     *
+     * @param string $method
+     * @param array $arguments
+     * @return Client|mixed
+     */
+    public function __call(string $method, array $arguments)
+    {
+        if (!method_exists($this->connection, $method)) {
+            throw new DomainException("Method [$method] not exists");
+        }
+
+        return $this->connection->{$method}(...$arguments);
     }
 
     /**
@@ -480,6 +497,25 @@ class Builder implements Contracts\Builder
     }
 
     /**
+     * Get base body
+     *
+     * @return array
+     */
+    public function toArray(): array
+    {
+        return $this->makePayload();
+    }
+
+    /**
+     * @inheritDoc
+     * @throws JsonException
+     */
+    public function toJson($options = 0): string
+    {
+        return json_encode($this->toArray(), JSON_THROW_ON_ERROR);
+    }
+
+    /**
      * Prepare request body
      *
      * @param bool $withSize
@@ -587,24 +623,5 @@ class Builder implements Contracts\Builder
                 ]
             ],
         ];
-    }
-
-    /**
-     * Get base body
-     *
-     * @return array
-     */
-    public function toArray(): array
-    {
-        return $this->makePayload();
-    }
-
-    /**
-     * @inheritDoc
-     * @throws JsonException
-     */
-    public function toJson($options = 0): string
-    {
-        return json_encode($this->toArray(), JSON_THROW_ON_ERROR);
     }
 }
