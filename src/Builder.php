@@ -90,11 +90,12 @@ class Builder implements Contracts\Builder
     protected string $index;
 
     /**
+     * @param ClientBuilder $clientBuilder
      * @param Contracts\Config $config
      */
-    public function __construct(Contracts\Config $config)
+    public function __construct(ClientBuilder $clientBuilder, Contracts\Config $config)
     {
-        $this->connect($config);
+        $this->connect($clientBuilder, $config);
     }
 
     /**
@@ -553,12 +554,13 @@ class Builder implements Contracts\Builder
     /**
      * Create base connection instance
      *
+     * @param ClientBuilder $clientBuilder
      * @param Contracts\Config $config
      * @return void
      */
-    protected function connect(Contracts\Config $config): void
+    protected function connect(ClientBuilder $clientBuilder, Contracts\Config $config): void
     {
-        $this->connection = ClientBuilder::create()
+        $this->connection = $clientBuilder
             ->setHosts($config->hosts())
             ->setBasicAuthentication($config->username(), $config->password())
             ->build();

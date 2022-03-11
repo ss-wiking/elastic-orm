@@ -13,6 +13,7 @@ use Illuminate\Contracts\Filesystem\FileNotFoundException;
 use Illuminate\Filesystem\Filesystem;
 use ReflectionClass;
 use ReflectionException;
+use SsWiking\ElasticOrm\Contracts\Config;
 use SsWiking\ElasticOrm\Model;
 
 class GenerateModelMeta extends Command
@@ -69,17 +70,17 @@ class GenerateModelMeta extends Command
 
     /**
      * @param Filesystem $files
+     * @param ClientBuilder $clientBuilder
+     * @param Config $config
      */
-    public function __construct(Filesystem $files)
+    public function __construct(Filesystem $files, ClientBuilder $clientBuilder, Config $config)
     {
         parent::__construct();
+
         $this->files = $files;
-        $this->client = ClientBuilder::create()
-            ->setHosts(config('elastic-orm.hosts'))
-            ->setBasicAuthentication(
-                config('elastic-orm.username'),
-                config('elastic-orm.password')
-            )
+        $this->client = $clientBuilder
+            ->setHosts($config->hosts())
+            ->setBasicAuthentication($config->username(), $config->password())
             ->build();
     }
 
@@ -103,8 +104,7 @@ class GenerateModelMeta extends Command
      *
      * @param string $class
      * @return void
-     * @throws ReflectionException
-     * @throws FileNotFoundException
+     * @throws ReflectionException|FileNotFoundException
      */
     private function generateFor(string $class): void
     {
@@ -130,7 +130,7 @@ class GenerateModelMeta extends Command
         $casts = $reflection->getDefaultProperties()['casts'];
 
         foreach ($mapping as $name => $property) {
-            $type = $this->resolveType($property['type']);
+            $type = static::resolveType($property['type']);
             if (!$type) {
                 $this->error("Unknown type [{$property['type']}] in mapping for model $classname");
             }
@@ -186,7 +186,7 @@ class GenerateModelMeta extends Command
      * @param string $type
      * @return string|null
      */
-    private function resolveType(string $type): ?string
+    public static function resolveType(string $type): ?string
     {
         foreach (self::TYPES as $phpType => $elasticTypes) {
             if (in_array($type, $elasticTypes, true)) {
